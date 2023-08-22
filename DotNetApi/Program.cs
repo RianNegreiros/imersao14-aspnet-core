@@ -1,4 +1,5 @@
 using DotNetApi.Data;
+using DotNetApi.GoogleMaps;
 using DotNetApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<AppDbContext>();
 builder.Services.AddScoped<RoutesService>();
+builder.Services.AddHttpClient("GoogleMapsClient", client =>
+{
+    client.BaseAddress = new Uri("https://maps.googleapis.com");
+});
+builder.Services.AddScoped<GoogleMapsService>();
 
 var app = builder.Build();
 
