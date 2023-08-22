@@ -1,3 +1,7 @@
+using DotNetApi.Data;
+using DotNetApi.GoogleMaps;
+using DotNetApi.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +10,13 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<AppDbContext>();
+builder.Services.AddScoped<RoutesService>();
+builder.Services.AddHttpClient("GoogleMapsClient", client =>
+{
+    client.BaseAddress = new Uri("https://maps.googleapis.com");
+});
+builder.Services.AddScoped<GoogleMapsService>();
 
 var app = builder.Build();
 

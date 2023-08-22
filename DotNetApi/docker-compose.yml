@@ -14,9 +14,9 @@ services:
       - mongodb_data:/bitnami/mongodb
     environment:
       MONGODB_ROOT_PASSWORD: root
-      MONGODB_REPLICA_SET_MODE: primary
-      MONGODB_REPLICA_SET_KEY: 123456
-      MONGODB_DATABASE: nest
+      # MONGODB_REPLICA_SET_MODE: primary
+      # MONGODB_REPLICA_SET_KEY: 123456
+      MONGODB_DATABASE: dotnet
 
 volumes:
   mongodb_data:
