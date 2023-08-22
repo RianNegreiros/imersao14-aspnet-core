@@ -2,6 +2,9 @@
   "ConnectionStrings": {
     "MongoDB": "mongodb://root:root@db:27017/dotnet?authSource=admin"
   },
+  "GoogleMaps": {
+    "API_KEY": "YOUR_API_KEY"
+  },
   "Logging": {
     "LogLevel": {
       "Default": "Information",
