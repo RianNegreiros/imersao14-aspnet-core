@@ -1,10 +1,7 @@
 using DotNetApi.Data;
 using DotNetApi.DTOs;
-using DotNetApi.GoogleMaps;
 using DotNetApi.Models;
-using MongoDB.Bson;
 using MongoDB.Driver;
-using Newtonsoft.Json;
 
 namespace DotNetApi.Services;
 public class RoutesService
@@ -52,6 +49,8 @@ public class RoutesService
                 AvailableTravelModes = directionsResponse.Routes.First().Legs.First().Steps.Select(s => s.TravelMode).ToList(),
                 Status = directionsResponse.Status
             },
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
         };
 
         await _routesCollection.InsertOneAsync(route);

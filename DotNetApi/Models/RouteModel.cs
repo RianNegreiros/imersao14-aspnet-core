@@ -1,4 +1,3 @@
-using DotNetApi.GoogleMaps;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -22,7 +21,7 @@ public class RouteModel
 
 public class DirectionsData
 {
-    public List<GoogleMaps.Route> Routes { get; set; }
+    public List<Route> Routes { get; set; }
     [BsonElement("geocoded_waypoints")]
     public List<GeocodedWaypoint> GeocodedWaypoints { get; set; }
     [BsonElement("available_travel_modes")]

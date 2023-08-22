@@ -13,3 +13,9 @@ public class RouteDriver
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }
+
+public class Point
+{
+    public Coord Location { get; set; }
+    public DateTime CreatedAt { get; set; }
+}
