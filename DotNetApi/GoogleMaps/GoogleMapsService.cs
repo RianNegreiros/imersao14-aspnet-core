@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace DotNetApi.GoogleMaps;
 public class GoogleMapsService
 {
@@ -20,7 +22,7 @@ public class GoogleMapsService
         if (response.IsSuccessStatusCode)
         {
             var content = await response.Content.ReadAsStringAsync();
-            var placeResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<GoogleMapsPlaceResponse>(content);
+            var placeResponse = JsonConvert.DeserializeObject<GoogleMapsPlaceResponse>(content);
             return placeResponse;
         }
         else
@@ -29,22 +31,24 @@ public class GoogleMapsService
         }
     }
 
-    // Response may be too large, perhaps not worth typing: https://developers.google.com/maps/documentation/directions/get-directions#DirectionsResponses
-    public async Task<string> GetDirectionsAsync(string placeOriginId, string placeDestinationId)
+    public async Task<GoogleMapsDirectionsResponse> GetDirectionsAsync(string originPlaceId, string destinationPlaceId)
     {
-        var response = await _httpClient.GetAsync(
-            $"https://maps.googleapis.com/maps/api/directions/json?origin=place_id:{placeOriginId}&destination=place_id:{placeDestinationId}&mode=driving&key={_configuration["GoogleMaps:API_KEY"]}",
-            HttpCompletionOption.ResponseContentRead
-        );
+        // Construct the request URL
+        string apiUrl = $"https://maps.googleapis.com/maps/api/directions/json?origin=place_id:{originPlaceId}&destination=place_id:{destinationPlaceId}&mode=driving&key={_configuration["GoogleMaps:API_KEY"]}";
+
+        // Make the API request
+        var response = await _httpClient.GetAsync(apiUrl);
 
         if (response.IsSuccessStatusCode)
         {
+            // Deserialize the JSON response using Newtonsoft.Json
             var content = await response.Content.ReadAsStringAsync();
-            return content;
+            var directionsResponse = JsonConvert.DeserializeObject<GoogleMapsDirectionsResponse>(content);
+
+            return directionsResponse;
         }
-        else
-        {
-            throw new Exception($"Google Maps Directions API request failed with status code {response.StatusCode}");
-        }
+
+        // Handle error here if needed
+        return null;
     }
 }

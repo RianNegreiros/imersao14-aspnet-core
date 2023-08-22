@@ -1,5 +1,6 @@
 using DotNetApi.GoogleMaps;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace DotNetApi.Controllers;
 [ApiController]
@@ -19,7 +20,7 @@ public class DirectionsController : ControllerBase
         try
         {
             var directionsResponse = await _googleMapsService.GetDirectionsAsync(placeOriginId, placeDestinationId);
-            return Content(directionsResponse, "application/json");
+            return Ok(directionsResponse);
         }
         catch (Exception ex)
         {
