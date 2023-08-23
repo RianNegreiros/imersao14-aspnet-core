@@ -1,6 +1,3 @@
-using DotNetApi.Models;
-using Newtonsoft.Json;
-
 namespace DotNetApi.Services;
 public class GoogleMapsService
 {
@@ -13,7 +10,7 @@ public class GoogleMapsService
         _configuration = configuration;
     }
 
-    public async Task<PlaceResponse> FindPlaceAsync(string text)
+    public async Task<string> FindPlaceAsync(string text)
     {
         string apiUrl = $"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={Uri.EscapeDataString(text)}" +
                         $"&inputtype=textquery&fields=place_id,formatted_address,geometry,name" +
@@ -23,8 +20,7 @@ public class GoogleMapsService
         if (response.IsSuccessStatusCode)
         {
             var content = await response.Content.ReadAsStringAsync();
-            var placeResponse = JsonConvert.DeserializeObject<PlaceResponse>(content);
-            return placeResponse;
+            return content;
         }
         else
         {
@@ -32,7 +28,7 @@ public class GoogleMapsService
         }
     }
 
-    public async Task<DirectionsResponse> GetDirectionsAsync(string originPlaceId, string destinationPlaceId)
+    public async Task<string> GetDirectionsAsync(string originPlaceId, string destinationPlaceId)
     {
         string apiUrl = $"https://maps.googleapis.com/maps/api/directions/json?origin=place_id:{originPlaceId}&destination=place_id:{destinationPlaceId}&mode=driving&key={_configuration["GoogleMaps:API_KEY"]}";
 
@@ -41,11 +37,8 @@ public class GoogleMapsService
         if (response.IsSuccessStatusCode)
         {
             var content = await response.Content.ReadAsStringAsync();
-            var directionsResponse = JsonConvert.DeserializeObject<DirectionsResponse>(content);
-
-            return directionsResponse;
+            return content;
         }
-
         return null;
     }
 }

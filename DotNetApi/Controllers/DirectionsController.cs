@@ -19,7 +19,14 @@ public class DirectionsController : ControllerBase
         try
         {
             var directionsResponse = await _googleMapsService.GetDirectionsAsync(placeOriginId, placeDestinationId);
-            return Ok(directionsResponse);
+            if (directionsResponse != null)
+            {
+                return Content(directionsResponse, "application/json");
+            }
+            else
+            {
+                return NotFound();
+            }
         }
         catch (Exception ex)
         {

@@ -2,6 +2,7 @@ using DotNetApi.Data;
 using DotNetApi.DTOs;
 using DotNetApi.Models;
 using MongoDB.Driver;
+using Newtonsoft.Json;
 
 namespace DotNetApi.Services;
 public class RoutesService
@@ -16,7 +17,12 @@ public class RoutesService
 
     public async Task<RouteModel> CreateRouteAsync(CreateRouteDto createRouteDto)
     {
-        var directionsResponse = await _googleMapsService.GetDirectionsAsync(createRouteDto.SourceId, createRouteDto.DestinationId);
+        var directionsResponseJson = await _googleMapsService.GetDirectionsAsync(createRouteDto.SourceId, createRouteDto.DestinationId);
+        var directionsResponse = JsonConvert.DeserializeObject<DirectionsResponse>(directionsResponseJson);
+        if (directionsResponse == null)
+        {
+            return null;
+        }
 
         var legs = directionsResponse.Routes.First().Legs.First();
         var route = new RouteModel
@@ -24,12 +30,12 @@ public class RoutesService
             Name = createRouteDto.Name,
             Source = new Place
             {
-                Name = directionsResponse.Routes[0].Legs[0].StartAddress,
+                Name = legs.StartAddress,
                 Location = new Coord
                 {
                     Lat = legs.StartLocation.Lat,
                     Lng = legs.StartLocation.Lng
-                },
+                }
             },
             Destination = new Place
             {
@@ -38,16 +44,36 @@ public class RoutesService
                 {
                     Lat = legs.EndLocation.Lat,
                     Lng = legs.EndLocation.Lng
-                },
+                }
             },
             Distance = legs.Distance.Value,
             Duration = legs.Duration.Value,
             Directions = new DirectionsData
             {
-                Routes = directionsResponse.Routes,
+                AvailableTravelModes = directionsResponse.Routes.First().Legs.First().Steps.Select(s => s.TravelMode).Distinct().ToList(),
                 GeocodedWaypoints = directionsResponse.GeocodedWaypoints,
-                AvailableTravelModes = directionsResponse.Routes.First().Legs.First().Steps.Select(s => s.TravelMode).ToList(),
-                Status = directionsResponse.Status
+                Routes = directionsResponse.Routes,
+                Request = new DirectionsRequest
+                {
+                    Origin = new RequestData
+                    {
+                        PlaceId = createRouteDto.SourceId,
+                        Location = new Coord
+                        {
+                            Lat = legs.StartLocation.Lat,
+                            Lng = legs.StartLocation.Lng
+                        }
+                    },
+                    Destination = new RequestData
+                    {
+                        PlaceId = createRouteDto.DestinationId,
+                        Location = new Coord
+                        {
+                            Lat = legs.EndLocation.Lat,
+                            Lng = legs.EndLocation.Lng
+                        }
+                    }
+                }
             },
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow

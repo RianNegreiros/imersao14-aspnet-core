@@ -18,14 +18,3 @@ public class RouteModel
     public DateTime UpdatedAt { get; set; }
     public List<RouteDriver> RouteDrivers { get; set; }
 }
-
-public class DirectionsData
-{
-    public List<Route> Routes { get; set; }
-    [BsonElement("geocoded_waypoints")]
-    public List<GeocodedWaypoint> GeocodedWaypoints { get; set; }
-    [BsonElement("available_travel_modes")]
-    public List<string> AvailableTravelModes { get; set; }
-    
-    public string Status { get; set; }
-}
