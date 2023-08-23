@@ -1,5 +1,4 @@
 using DotNetApi.Data;
-using DotNetApi.GoogleMaps;
 using DotNetApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
