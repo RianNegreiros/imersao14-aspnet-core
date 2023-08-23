@@ -13,12 +13,12 @@ public class DirectionsController : ControllerBase
         _googleMapsService = googleMapsService;
     }
 
-    [HttpGet("getDirections")]
-    public async Task<IActionResult> GetDirections([FromQuery] string placeOriginId, [FromQuery] string placeDestinationId)
+    [HttpGet]
+    public async Task<IActionResult> GetDirections([FromQuery] string originId, [FromQuery] string destinationId)
     {
         try
         {
-            var directionsResponse = await _googleMapsService.GetDirectionsAsync(placeOriginId, placeDestinationId);
+            var directionsResponse = await _googleMapsService.GetDirectionsAsync(originId, destinationId);
             if (directionsResponse != null)
             {
                 return Content(directionsResponse, "application/json");
