@@ -1,5 +1,4 @@
 using DotNetApi.Data;
-using DotNetApi.GoogleMaps;
 using DotNetApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +17,14 @@ builder.Services.AddHttpClient("GoogleMapsClient", client =>
 });
 builder.Services.AddScoped<GoogleMapsService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,6 +33,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 

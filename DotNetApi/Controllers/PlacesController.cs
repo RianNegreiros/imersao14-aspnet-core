@@ -1,4 +1,4 @@
-using DotNetApi.GoogleMaps;
+using DotNetApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotNetApi.Controllers;
@@ -7,7 +7,7 @@ namespace DotNetApi.Controllers;
 public class PlacesController : ControllerBase
 {
     private readonly GoogleMapsService _placesService;
-    
+
     public PlacesController(GoogleMapsService placesService)
     {
         _placesService = placesService;
@@ -18,8 +18,15 @@ public class PlacesController : ControllerBase
     {
         try
         {
-            var place = await _placesService.FindPlaceAsync(text);
-            return Ok(place);
+            var placeResponse = await _placesService.FindPlaceAsync(text);
+            if (!string.IsNullOrEmpty(placeResponse))
+            {
+                return Content(placeResponse, "application/json");
+            }
+            else
+            {
+                return NotFound();
+            }
         }
         catch (Exception ex)
         {

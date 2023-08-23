@@ -26,12 +26,6 @@ public class Geometry
   public Viewport Viewport { get; set; }
 }
 
-public class Location
-{
-  public float Lat { get; set; }
-  public float Lng { get; set; }
-}
-
 public class Viewport
 {
   public Northeast Northeast { get; set; }
