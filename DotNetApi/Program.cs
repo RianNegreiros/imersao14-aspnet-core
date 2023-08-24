@@ -2,6 +2,7 @@ using DotNetApi.Data;
 using DotNetApi.Jobs;
 using DotNetApi.Services;
 using DotNetApi.WebSockets;
+using Prometheus;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -49,6 +50,8 @@ app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMetricServer();
 
 app.MapControllers();
 

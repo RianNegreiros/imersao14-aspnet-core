@@ -10,6 +10,7 @@
     <PackageReference Include="Confluent.Kafka" Version="2.2.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.21.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="prometheus-net.AspNetCore" Version="8.0.1" />
     <PackageReference Include="SocketIoClientDotNet" Version="0.9.13" />
     <PackageReference Include="StackExchange.Redis" Version="2.6.122" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
