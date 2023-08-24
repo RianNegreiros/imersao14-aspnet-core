@@ -7,6 +7,8 @@ services:
       - "5000:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
 
   db:
     image: bitnami/mongodb:5.0.17
@@ -17,6 +19,9 @@ services:
       # MONGODB_REPLICA_SET_MODE: primary
       # MONGODB_REPLICA_SET_KEY: 123456
       MONGODB_DATABASE: dotnet
+
+  redis:
+    image: redis:7.0.8-alpine
 
 volumes:
   mongodb_data:
