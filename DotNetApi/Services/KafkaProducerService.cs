@@ -16,17 +16,12 @@ public class KafkaProducerService
         _producer = new ProducerBuilder<string, string>(producerConfig).Build();
     }
 
-    public async Task ProduceAsync(string topic, string eventName, string id, string name, string distance)
+    public async Task ProduceAsync(string topic, string eventName, object data)
     {
         var message = new Message<string, string>
         {
             Key = eventName,
-            Value = JsonConvert.SerializeObject(new
-            {
-                Id = id,
-                Name = name,
-                Distance = distance
-            })
+            Value = JsonConvert.SerializeObject(data)
         };
 
         await _producer.ProduceAsync(topic, message);

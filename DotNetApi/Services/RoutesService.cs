@@ -9,10 +9,12 @@ public class RoutesService
 {
     private readonly IMongoCollection<RouteModel> _routesCollection;
     private readonly GoogleMapsService _googleMapsService;
-    public RoutesService(AppDbContext dbContext, GoogleMapsService googleMapsService)
+    private readonly KafkaProducerService _kafkaProducerService;
+    public RoutesService(AppDbContext dbContext, GoogleMapsService googleMapsService, KafkaProducerService kafkaProducerService)
     {
         _routesCollection = dbContext.Routes;
         _googleMapsService = googleMapsService;
+        _kafkaProducerService = kafkaProducerService;
     }
 
     public async Task<RouteModel> CreateRouteAsync(CreateRouteDto createRouteDto)
@@ -80,6 +82,21 @@ public class RoutesService
         };
 
         await _routesCollection.InsertOneAsync(route);
+
+        await _kafkaProducerService.ProduceAsync(
+            topic: "route",
+            eventName: "RouteCreated",
+            data: new
+            {
+                route.Id,
+                route.Name,
+                route.Source,
+                route.Destination,
+                route.Distance,
+                route.Duration,
+                route.Directions
+            }
+        );
 
         return route;
     }
