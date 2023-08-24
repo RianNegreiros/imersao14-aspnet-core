@@ -2,7 +2,7 @@ using DotNetApi.Data;
 using DotNetApi.DTOs;
 using DotNetApi.Models;
 using MongoDB.Driver;
-using Newtonsoft.Json;
+using Prometheus;
 
 namespace DotNetApi.Services
 {
@@ -37,8 +37,12 @@ namespace DotNetApi.Services
             var options = new UpdateOptions { IsUpsert = true };
             await _routesDriver.UpdateOneAsync(filter, update, options);
 
+            Counter routeStartedCounter = Metrics.CreateCounter("route_started_counter", "Route driver started route");
+            Counter routeFinishedCounter = Metrics.CreateCounter("route_finished_counter", "Route driver finished route");
+
             if (countRouteDriver == 0)
             {
+                routeStartedCounter.Inc();
                 await _kafkaProducerService.ProduceAsync("route", "RouteStarted", data: new
                 {
                     Id = routeDriverDto.RouteId,
@@ -52,7 +56,8 @@ namespace DotNetApi.Services
 
             if (lastPoint.Location.Lat == routeDriverDto.Lat && lastPoint.Location.Lng == routeDriverDto.Lng)
             {
-                await _kafkaProducerService.ProduceAsync("route", "DriverStopped", data: new
+                routeFinishedCounter.Inc();
+                await _kafkaProducerService.ProduceAsync("route", "RouteFinished", data: new
                 {
                     Id = routeDriverDto.RouteId,
                     StopAt = DateTime.UtcNow,
