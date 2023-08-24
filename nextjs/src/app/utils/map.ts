@@ -181,7 +181,7 @@ export class Map {
   }
 }
 
-export class RouteExistsError extends Error { }
+export class RouteExistsError extends Error {}
 
 export class Route {
   public startMarker: google.maps.Marker;
