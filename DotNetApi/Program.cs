@@ -32,6 +32,7 @@ builder.Services.AddSingleton(new RoutesGateway("http://localhost:5000"));
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("redis:6379"));
 builder.Services.AddSingleton<IJobQueue, RedisJobQueue>();
+builder.Services.AddSingleton<KafkaProducerService>();
 builder.Services.AddHostedService<JobProcessorService>();
 
 var app = builder.Build();
