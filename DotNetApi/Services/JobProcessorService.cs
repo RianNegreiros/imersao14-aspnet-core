@@ -8,13 +8,11 @@ public class JobProcessorService : BackgroundService
 {
     private readonly IServiceProvider _provider;
     private readonly IConnectionMultiplexer _redisConnection;
-    private readonly RoutesDriverService _routesDriverService;
 
-    public JobProcessorService(IServiceProvider provider, IConnectionMultiplexer redisConnection, RoutesDriverService routesDriverService)
+    public JobProcessorService(IServiceProvider provider, IConnectionMultiplexer redisConnection)
     {
         _provider = provider;
         _redisConnection = redisConnection;
-        _routesDriverService = routesDriverService;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
