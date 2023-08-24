@@ -1,5 +1,8 @@
 using DotNetApi.Data;
+using DotNetApi.Jobs;
 using DotNetApi.Services;
+using DotNetApi.WebSockets;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +27,12 @@ builder.Services.AddCors(options =>
         policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
     });
 });
+
+builder.Services.AddSingleton(new RoutesGateway("http://localhost:5000"));
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("redis:6379"));
+builder.Services.AddSingleton<IJobQueue, RedisJobQueue>();
+builder.Services.AddHostedService<JobProcessorService>();
 
 var app = builder.Build();
 

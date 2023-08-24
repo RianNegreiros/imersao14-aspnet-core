@@ -1,4 +1,5 @@
 using DotNetApi.DTOs;
+using DotNetApi.Jobs;
 using DotNetApi.Services;
 using DotNetApi.WebSockets;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,12 @@ public class RoutesController : ControllerBase
 {
     private readonly RoutesService _routesService;
     private readonly RoutesGateway _routesGateway;
-    public RoutesController(RoutesService routesService, RoutesGateway routesGateway)
+    private readonly IJobQueue _jobProcessorService;
+    public RoutesController(RoutesService routesService, RoutesGateway routesGateway, IJobQueue jobProcessorService)
     {
         _routesService = routesService;
         _routesGateway = routesGateway;
+        _jobProcessorService = jobProcessorService;
     }
 
     [HttpPost]
@@ -39,6 +42,7 @@ public class RoutesController : ControllerBase
     public IActionResult SendNewPoints([FromBody] NewPointsPayload payload)
     {
         _routesGateway.SendMessage(payload.RouteId, payload.Lat, payload.Lng);
+        _jobProcessorService.EnqueueAsync(payload);
         return Ok("Message sent to Socket.IO server.");
     }
 }

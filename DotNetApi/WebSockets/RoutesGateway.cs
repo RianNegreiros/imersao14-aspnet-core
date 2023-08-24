@@ -40,7 +40,9 @@ public class RoutesGateway
             lng
         };
 
-        socket.Emit("new-points", JObject.FromObject(payload));
+        socket.Emit($"new-points/{routeId}", JObject.FromObject(payload));
+        socket.Emit("admin-new-points", JObject.FromObject(payload));
+        
     }
 
     public void Disconnect()
