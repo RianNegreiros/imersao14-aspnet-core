@@ -2,6 +2,12 @@ package entity
 
 import "time"
 
+type RouteRepository interface {
+	Create(route *Route) error
+	FindById(id string) (*Route, error)
+	Update(route *Route) error
+}
+
 type Route struct {
 	ID           string
 	Name         string
