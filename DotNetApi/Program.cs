@@ -2,19 +2,27 @@ using DotNetApi.Data;
 using DotNetApi.Jobs;
 using DotNetApi.Services;
 using DotNetApi.WebSockets;
+using Newtonsoft.Json.Serialization;
 using Prometheus;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ContractResolver = new DefaultContractResolver
+        {
+            NamingStrategy = new SnakeCaseNamingStrategy()
+        };
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<AppDbContext>();
 builder.Services.AddScoped<RoutesService>();
+builder.Services.AddScoped<RoutesDriverService>();
 builder.Services.AddHttpClient("GoogleMapsClient", client =>
 {
     client.BaseAddress = new Uri("https://maps.googleapis.com");
@@ -29,7 +37,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddSingleton(new RoutesGateway("http://localhost:5000"));
+builder.Services.AddSingleton(new RoutesGateway("http://localhost:5000/socket.io/"));
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("redis:6379"));
 builder.Services.AddSingleton<IJobQueue, RedisJobQueue>();
