@@ -52,7 +52,7 @@ namespace DotNetApi.Services
                 });
             }
 
-            var lastPoint = await _routesDriver.Find(filter).Project(x => x.Points.LastOrDefault()).FirstOrDefaultAsync();
+            var lastPoint = await _routesDriver.Find(filter).Project(x => x.Points[-1]).FirstOrDefaultAsync();
 
             if (lastPoint.Location.Lat == routeDriverDto.Lat && lastPoint.Location.Lng == routeDriverDto.Lng)
             {
