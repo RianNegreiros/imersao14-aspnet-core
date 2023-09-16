@@ -1,4 +1,5 @@
 using dotnet.Data;
+using dotnet.Extensions;
 using dotnet.Jobs;
 using dotnet.Services;
 using dotnet.WebSockets;
@@ -19,10 +20,13 @@ builder.Services.AddControllers()
     });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwagger();
+
 builder.Services.AddSingleton<AppDbContext>();
 builder.Services.AddScoped<RoutesService>();
 builder.Services.AddScoped<RoutesDriverService>();
+
 builder.Services.AddHttpClient("GoogleMapsClient", client =>
 {
     client.BaseAddress = new Uri("https://maps.googleapis.com");
@@ -49,8 +53,6 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
 
 app.UseCors("CorsPolicy");

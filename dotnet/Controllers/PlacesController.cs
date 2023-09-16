@@ -1,7 +1,9 @@
 using dotnet.Services;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace dotnet.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
 public class PlacesController : ControllerBase
@@ -14,6 +16,12 @@ public class PlacesController : ControllerBase
     }
 
     [HttpGet]
+    [SwaggerOperation(Summary = "Obtém os locais próximos a uma coordenada")]
+    [SwaggerResponse(200, "Locais obtidos com sucesso")]
+    [SwaggerResponse(404, "Locais não encontrados")]
+    [SwaggerResponse(500, "Erro interno do servidor")]
+    [Produces("application/json")]
+    [Consumes("application/json")]
     public async Task<IActionResult> FindPlace([FromQuery] string text)
     {
         try

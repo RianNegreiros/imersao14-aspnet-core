@@ -1,7 +1,9 @@
 using dotnet.Services;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace dotnet.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
 public class DirectionsController : ControllerBase
@@ -13,6 +15,12 @@ public class DirectionsController : ControllerBase
         _googleMapsService = googleMapsService;
     }
 
+    [SwaggerOperation(Summary = "Obtém as direções entre origem e destino")]
+    [SwaggerResponse(200, "Direções obtidas com sucesso")]
+    [SwaggerResponse(404, "Direções não encontradas")]
+    [SwaggerResponse(500, "Erro interno do servidor")]
+    [Produces("application/json")]
+    [Consumes("application/json")]
     [HttpGet]
     public async Task<IActionResult> GetDirections([FromQuery] string originId, [FromQuery] string destinationId)
     {
