@@ -19,8 +19,6 @@ public class DirectionsController : ControllerBase
     [SwaggerResponse(200, "Direções obtidas com sucesso")]
     [SwaggerResponse(404, "Direções não encontradas")]
     [SwaggerResponse(500, "Erro interno do servidor")]
-    [Produces("application/json")]
-    [Consumes("application/json")]
     [HttpGet]
     public async Task<IActionResult> GetDirections([FromQuery] string originId, [FromQuery] string destinationId)
     {

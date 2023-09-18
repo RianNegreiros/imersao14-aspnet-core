@@ -21,8 +21,6 @@ public class RoutesController : ControllerBase
     [ProducesResponseType(typeof(RouteModel), 200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
-    [Produces("application/json")]
-    [Consumes("application/json")]
     public async Task<IActionResult> CreateRoute([FromBody] CreateRouteDto routeDto)
     {
         if (!ModelState.IsValid)
@@ -50,8 +48,6 @@ public class RoutesController : ControllerBase
     [ProducesResponseType(typeof(RouteModel), 200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
-    [Produces("application/json")]
-    [Consumes("application/json")]
     public async Task<IActionResult> FindOne([FromRoute] string id)
     {
         var route = await _routesService.FindOneAsync(id);
@@ -90,17 +86,15 @@ public class RoutesController : ControllerBase
     [ProducesResponseType(typeof(RouteModel), 200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
-    [Produces("application/json")]
-    [Consumes("application/json")]
     public async Task<IActionResult> DeleteRoute([FromQuery] string id)
     {
-        var deletedRoute = await _routesService.RemoveAsync(id);
-
-        if (deletedRoute)
+        var deleted = await _routesService.RemoveAsync(id);
+        
+        if (!deleted)
         {
             return NotFound();
         }
 
-        return Ok(deletedRoute);
+        return Ok();
     }
 }
